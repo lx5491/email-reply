@@ -107,10 +107,10 @@ model.build_vocab(sentences.to_array())
 
 logger.info('Epoch')
 for epoch in range(10):
-    log.info('EPOCH: {}'.format(epoch))
+    logger.info('EPOCH: {}'.format(epoch))
     model.train(sentences.sentences_perm())
 
-log.info('Model Save')
+logger.info('Model Save')
 model.save('./reply.d2v')
 model = Doc2Vec.load('./reply.d2v')
 
