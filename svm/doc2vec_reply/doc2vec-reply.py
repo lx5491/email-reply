@@ -93,7 +93,7 @@ source = sys.argv[1]
 sentences = TaggedLineSentence(source)
 
 logger.info("loading source: %s" % source)
-sentences.load_data("../email_data_text_big.txt")
+sentences.load_data(source)
 logger.info("finished loading source")
 
 logger.info("making words in emails clean")
