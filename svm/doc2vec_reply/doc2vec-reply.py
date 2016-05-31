@@ -57,7 +57,7 @@ class TaggedLineSentence(object):
     def remove_bad_words_and_make_lower(self, bag_of_words):
         new_bag_of_words = []
         for word in bag_of_words:
-            if word not in stop_words and len(word) <= 20 and url_re_matcher.match(word) == None \
+            if word not in self.stop_words and len(word) <= 20 and url_re_matcher.match(word) == None \
                 and email_re_matcher.match(word) == None:
                 word = word.encode('utf-8') # change unicode object to normal string
                 word = word.translate(string.maketrans("", ""), string.punctuation)
