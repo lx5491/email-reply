@@ -54,7 +54,7 @@ class TaggedLineSentence(object):
                 self.stop_words[word] = 1
 
     # bad words are stop words, a too-lengthy word, urls, and email addresses
-    def remove_bad_words_and_make_lower(bag_of_words):
+    def remove_bad_words_and_make_lower(self, bag_of_words):
         new_bag_of_words = []
         for word in bag_of_words:
             if word not in stop_words and len(word) <= 20 and url_re_matcher.match(word) == None \
