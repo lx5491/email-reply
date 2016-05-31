@@ -18,6 +18,7 @@ import os
 import json
 import re
 import string
+import os.path
 
 program = os.path.basename(sys.argv[0])
 logger = logging.getLogger(program)
@@ -123,15 +124,41 @@ logger.info("D2V")
 model = Doc2Vec(min_count=1, window=10, size=100, sample=1e-4, negative=5, workers=7)
 model.build_vocab(sentences.to_array())
 
-logger.info('Epoch')
-for epoch in range(10):
-    logger.info('EPOCH: {}'.format(epoch))
-    model.train(sentences.sentences_perm())
+d2v_filename = sys.argv[2]
+if not os.path.isfile(d2v_filename):
+    logger.info('Epoch')
+    for epoch in range(10):
+        logger.info('EPOCH: {}'.format(epoch))
+        model.train(sentences.sentences_perm())
+    logger.info('Model Save')
+    model.save('./reply.d2v')
+else:
+    logger.info("D2V file found, no need to train")
 
-logger.info('Model Save')
-model.save('./reply.d2v')
 model = Doc2Vec.load('./reply.d2v')
 
+num_total_emails = sentences.num_emails_yes + sentences.num_emails_no
+email_arrays = numpy.zeros((num_total_emails, 100))
+email_labels = numpy.zeros(num_total_emails)
+
+for i in range(sentences.num_emails_yes):
+    sentence_label = "YES_%s" % i
+    email_arrays[i] = model.docvecs[sentence_label]
+    email_labels[i] = 1
+
+for i in range(sentences.num_emails_no):
+    sentence_label = "NO_%s" % i
+    email_arrays[i + sentences.num_emails_yes] = model.docvecs[sentence_label]
+    email_labels[i + sentences.num_emails_yes] = 0
+
+log.info('Fitting')
+classifier = LogisticRegression()
+classifier.fit(email_arrays, email_labels)
+
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
+
+print classifier.score(email_arrays, email_arrays) # using train to test train accuracy
 
 
 
