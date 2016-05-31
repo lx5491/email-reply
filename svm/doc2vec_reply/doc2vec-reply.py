@@ -98,6 +98,7 @@ class TaggedLineSentence(object):
                 else:
                     prefix = "NO"
                     label = prefix + '_%s' % str(no_count)
+                    print "label:", label
                     no_count += 1
                 self.sentences.append(TaggedDocument(email["clean_words"], [label]))
 
