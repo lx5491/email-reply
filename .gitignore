@@ -2,3 +2,4 @@ svm/email_data*
 svm/text8*
 svm/GoogleNews*
 *.DS_Store
+*.d2v
