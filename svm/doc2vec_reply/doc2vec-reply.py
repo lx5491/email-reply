@@ -11,6 +11,7 @@ import numpy as np
 
 # classifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.cross_validation import train_test_split
 
 import logging
@@ -180,8 +181,9 @@ for i in range(sentences.num_emails_no):
 logger.info('Fitting')
 train_arrays, test_arrays, train_labels, test_labels = train_test_split(email_arrays, email_labels, test_size=0.2, random_state=42)
 
-classifier = LogisticRegression(C=2.0, class_weight=None, dual=False, fit_intercept=True,
-          intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
+# classifier = LogisticRegression(C=2.0, class_weight=None, dual=False, fit_intercept=True,
+#           intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
+classifier = SVC()
 classifier.fit(train_arrays, train_labels)
 
 
