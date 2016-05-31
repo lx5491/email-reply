@@ -70,19 +70,34 @@ class TaggedLineSentence(object):
         return new_bag_of_words
 
     def make_clean(self):
+        self.num_emails_yes = 0
+        self.num_emails_no = 0
         for idx, _ in enumerate(self.emails):
             body_text = self.emails[idx]["body"]
             del self.emails[idx]["body"]
             body_words_lst = body_text.split()
             body_words_lst = self.remove_bad_words_and_make_lower(body_words_lst)
             self.emails[idx]["clean_words"] = body_words_lst
+            if self.emails[idx]["got_reply"] == "yes":
+                self.num_emails_yes += 1
+            else:
+                self.num_emails_no += 1
 
     def to_array(self):
         if not hasattr(self, 'sentences') or not self.sentences:
             self.sentences = []
+            yes_count = 0
+            no_count = 0
             for email_no, email in enumerate(self.emails):
-                prefix = "TRAIN"
-                self.sentences.append(TaggedDocument(email["clean_words"], [prefix + '_%s' % email_no]))
+                if self.emails["got_reply"] == "yes":
+                    prefix = "YES"
+                    label = prefix + '_%s' % str(yes_count)
+                    yes_count += 1
+                else:
+                    prefix = "NO"
+                    label = prefix + '_%s' % str(no_count)
+                    no_count += 1
+                self.sentences.append(TaggedDocument(email["clean_words"], [label]))
 
         return self.sentences
 
