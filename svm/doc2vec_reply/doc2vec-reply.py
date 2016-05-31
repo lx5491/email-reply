@@ -89,7 +89,7 @@ class TaggedLineSentence(object):
         return self.sentences
 
 logger.info("program starts")
-source = "../email_data_text.txt"
+source = sys.argv[1]
 sentences = TaggedLineSentence(source)
 
 logger.info("loading source: %s" % source)
