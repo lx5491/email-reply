@@ -62,6 +62,7 @@ class TaggedLineSentence(object):
                 word = word.encode('utf-8') # change unicode object to normal string
                 word = word.translate(string.maketrans("", ""), string.punctuation)
                 word = word.lower()
+                word = word.decode('utf-8')
                 new_bag_of_words.append(word)
 
         return new_bag_of_words
@@ -69,16 +70,18 @@ class TaggedLineSentence(object):
     def make_clean(self):
         for idx, _ in enumerate(self.emails):
             body_text = self.emails[idx]["body"]
+            del self.emails[idx]["body"]
             body_words_lst = body_text.split()
             body_words_lst = self.remove_bad_words_and_make_lower(body_words_lst)
-
+            self.emails[idx]["clean_words"] = body_words_lst
 
     def to_array(self):
-        self.sentences = []
-        for source, prefix in self.sources.items():
-            with utils.smart_open(source) as fin:
-                for item_no, line in enumerate(fin):
-                    self.sentences.append(TaggedDocument(utils.to_unicode(line).split(), [prefix + '_%s' % item_no]))
+        if not hasattr(self, 'sentences') or not self.sentences:
+            self.sentences = []
+            for email_no, email in enumerate(emails):
+                prefix = "TRAIN"
+                self.sentences.append(TaggedDocument(email["clean_words"], [prefix + '_%s' % email_no]))
+
         return self.sentences
 
     def sentences_perm(self):
@@ -88,9 +91,27 @@ class TaggedLineSentence(object):
 logger.info("program starts")
 source = "../email_data_text.txt"
 sentences = TaggedLineSentence(source)
+
 logger.info("loading source: %s" % source)
 sentences.load_data("../email_data_text_big.txt")
 logger.info("finished loading source")
+
+logger.info("making words in emails clean")
+sentences.make_clean()
+
+logger.info("D2V")
+model = Doc2Vec(min_count=1, window=10, size=100, sample=1e-4, negative=5, workers=7)
+model.build_vocab(sentences.to_array())
+
+logger.info('Epoch')
+for epoch in range(10):
+    log.info('EPOCH: {}'.format(epoch))
+    model.train(sentences.sentences_perm())
+
+log.info('Model Save')
+model.save('./reply.d2v')
+model = Doc2Vec.load('./reply.d2v')
+
 
 
 
