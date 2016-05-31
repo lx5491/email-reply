@@ -153,7 +153,7 @@ for i in range(sentences.num_emails_no):
     email_labels[i + sentences.num_emails_yes] = 0
 
 logger.info('Fitting')
-train_arrays, test_arrays, train_labels, test_labels = train_test_split(X, y, test_size=0.2, random_state=42)
+train_arrays, test_arrays, train_labels, test_labels = train_test_split(email_arrays, email_labels, test_size=0.2, random_state=42)
 
 classifier = LogisticRegression()
 classifier.fit(train_arrays, train_labels)
