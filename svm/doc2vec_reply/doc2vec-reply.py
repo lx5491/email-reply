@@ -151,7 +151,7 @@ for i in range(sentences.num_emails_no):
     email_arrays[i + sentences.num_emails_yes] = model.docvecs[sentence_label]
     email_labels[i + sentences.num_emails_yes] = 0
 
-log.info('Fitting')
+logger.info('Fitting')
 classifier = LogisticRegression()
 classifier.fit(email_arrays, email_labels)
 
