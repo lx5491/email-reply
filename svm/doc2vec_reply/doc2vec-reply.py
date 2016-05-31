@@ -95,12 +95,12 @@ class TaggedLineSentence(object):
                 if email["got_reply"] == "yes":
                     prefix = "YES"
                     label = prefix + '_%s' % str(yes_count)
-                    print "label:", label
+                    # print "label:", label
                     yes_count += 1
                 else:
                     prefix = "NO"
                     label = prefix + '_%s' % str(no_count)
-                    print "label:", label
+                    # print "label:", label
                     no_count += 1
                 self.sentences.append(TaggedDocument(email["clean_words"], [label]))
 
@@ -109,6 +109,31 @@ class TaggedLineSentence(object):
     def sentences_perm(self):
         shuffle(self.sentences)
         return self.sentences
+
+def metric_predict(y_true, y_predict):
+    metric = dict({})
+    correct = 0
+    true_positive = 0
+    false_positive = 0
+    true_negative = 0
+    false_negative = 0
+    for i in xrange(len(y_true)):
+        if y_true[i] == y_predict[i] and y_predict[i] == 1:
+            true_positive += 1
+        elif y_true[i] == y_predict[i] and y_predict[i] == 0:
+            true_negative += 1
+        elif y_true[i] != y_predict[i] and y_predict[i] == 1:
+            false_positive += 1
+        elif y_true[i] != y_predict[i] and y_predict[i] == 0:
+            false_negative += 1
+    # print true_positive, true_negative, false_positive, false_negative
+    # precision = float(true_positive) / (true_positive + false_positive)
+    # recall = float(true_positive) / (true_positive + false_negative)
+    # f1_score = 2 * precision * recall / (precision + recall)
+    # metric = {"precision":precision, "recall":recall, "f1_score":f1_score, \
+    #     "tp":true_positive, "fp":false_positive, "tn":true_negative, "fn":false_negative}
+    metric = {"tp":true_positive, "fp":false_positive, "tn":true_negative, "fn":false_negative}
+    return metric
 
 logger.info("program starts")
 source = sys.argv[1]
@@ -161,7 +186,31 @@ classifier.fit(train_arrays, train_labels)
 LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
           intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
 
-print classifier.score(test_arrays, test_labels)
+print "Test score:", classifier.score(train_arrays, train_labels)
+print "Test score:", classifier.score(test_arrays, test_labels)
+
+label_predict_train = classifier.predict(train_arrays)
+label_predict_test = classifier.predict(test_arrays)
+metric_train = metric_predict(train_labels, label_predict_train)
+metric_test = metric_predict(test_labels, label_predict_test)
+
+train_precision = metric_train["precision"]
+train_recall = metric_train["recall"]
+train_f1_score = metric_train["f1_score"]
+print "Train metric(tp, fp, tn, fn):", metric_train["tp"], metric_train["fp"], metric_train["tn"], metric_train["fn"]
+# print "Train precision:", metric_train["tp"], "/", (metric_train["tp"] + metric_train["fp"]), ",", train_precision
+# print "Train recall: ", metric_train["tp"], "/", (metric_train["tp"] + metric_train["fn"]), ",", train_recall
+# print "Train F1 score:", train_f1_score
+print ""
+
+test_precision = metric_test["precision"]
+test_recall = metric_test["recall"]
+test_f1_score = metric_test["f1_score"]
+print "Test metric(tp, fp, tn, fn):", metric_test["tp"], metric_test["fp"], metric_test["tn"], metric_test["fn"]
+# print "Test precision:", metric_test["tp"], "/", (metric_test["tp"] + metric_test["fp"]), ",", test_precision
+# print "Test recall: ", metric_test["tp"], "/", (metric_test["tp"] + metric_test["fn"]), ",", test_recall
+# print "Test F1 score:", test_f1_score
+print
 
 
 
