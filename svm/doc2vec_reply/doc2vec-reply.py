@@ -158,7 +158,7 @@ classifier.fit(email_arrays, email_labels)
 LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
           intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
 
-print classifier.score(email_arrays, email_arrays) # using train to test train accuracy
+print classifier.score(email_arrays, email_labels) # using train to test train accuracy
 
 
 
