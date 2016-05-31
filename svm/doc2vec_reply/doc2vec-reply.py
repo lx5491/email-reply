@@ -11,6 +11,7 @@ import numpy as np
 
 # classifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.cross_validation import train_test_split
 
 import logging
 import sys
