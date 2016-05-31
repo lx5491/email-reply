@@ -28,6 +28,8 @@ logger.info("running %s" % ' '.join(sys.argv))
 class TaggedLineSentence(object):
     def __init__(self, source):
         self.source = source
+        self.url_re_matcher = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+        self.email_re_matcher = re.compile('[^@]+@[^@]+\.[^@]+')
 
     def __iter__(self):
         for source, prefix in self.sources.items():
@@ -57,8 +59,8 @@ class TaggedLineSentence(object):
     def remove_bad_words_and_make_lower(self, bag_of_words):
         new_bag_of_words = []
         for word in bag_of_words:
-            if word not in self.stop_words and len(word) <= 20 and url_re_matcher.match(word) == None \
-                and email_re_matcher.match(word) == None:
+            if word not in self.stop_words and len(word) <= 30 and self.url_re_matcher.match(word) == None \
+                and self.email_re_matcher.match(word) == None:
                 word = word.encode('utf-8') # change unicode object to normal string
                 word = word.translate(string.maketrans("", ""), string.punctuation)
                 word = word.lower()
