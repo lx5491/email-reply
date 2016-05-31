@@ -153,7 +153,7 @@ model.build_vocab(sentences.to_array())
 d2v_filename = sys.argv[2]
 if not os.path.isfile(d2v_filename):
     logger.info('Epoch')
-    for epoch in range(10):
+    for epoch in range(50):
         logger.info('EPOCH: {}'.format(epoch))
         model.train(sentences.sentences_perm())
     logger.info('Model Save')
