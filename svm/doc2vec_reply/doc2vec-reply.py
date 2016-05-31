@@ -152,13 +152,15 @@ for i in range(sentences.num_emails_no):
     email_labels[i + sentences.num_emails_yes] = 0
 
 logger.info('Fitting')
+train_arrays, test_arrays, train_labels, test_labels = train_test_split(X, y, test_size=0.2, random_state=42)
+
 classifier = LogisticRegression()
-classifier.fit(email_arrays, email_labels)
+classifier.fit(train_arrays, train_labels)
 
 LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
           intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
 
-print classifier.score(email_arrays, email_labels) # using train to test train accuracy
+print classifier.score(test_arrays, test_labels)
 
 
 
