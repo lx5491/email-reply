@@ -80,7 +80,7 @@ class TaggedLineSentence(object):
     def to_array(self):
         if not hasattr(self, 'sentences') or not self.sentences:
             self.sentences = []
-            for email_no, email in enumerate(emails):
+            for email_no, email in enumerate(self.emails):
                 prefix = "TRAIN"
                 self.sentences.append(TaggedDocument(email["clean_words"], [prefix + '_%s' % email_no]))
 
