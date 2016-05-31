@@ -194,18 +194,18 @@ label_predict_test = classifier.predict(test_arrays)
 metric_train = metric_predict(train_labels, label_predict_train)
 metric_test = metric_predict(test_labels, label_predict_test)
 
-train_precision = metric_train["precision"]
-train_recall = metric_train["recall"]
-train_f1_score = metric_train["f1_score"]
+# train_precision = metric_train["precision"]
+# train_recall = metric_train["recall"]
+# train_f1_score = metric_train["f1_score"]
 print "Train metric(tp, fp, tn, fn):", metric_train["tp"], metric_train["fp"], metric_train["tn"], metric_train["fn"]
 # print "Train precision:", metric_train["tp"], "/", (metric_train["tp"] + metric_train["fp"]), ",", train_precision
 # print "Train recall: ", metric_train["tp"], "/", (metric_train["tp"] + metric_train["fn"]), ",", train_recall
 # print "Train F1 score:", train_f1_score
 print ""
 
-test_precision = metric_test["precision"]
-test_recall = metric_test["recall"]
-test_f1_score = metric_test["f1_score"]
+# test_precision = metric_test["precision"]
+# test_recall = metric_test["recall"]
+# test_f1_score = metric_test["f1_score"]
 print "Test metric(tp, fp, tn, fn):", metric_test["tp"], metric_test["fp"], metric_test["tn"], metric_test["fn"]
 # print "Test precision:", metric_test["tp"], "/", (metric_test["tp"] + metric_test["fp"]), ",", test_precision
 # print "Test recall: ", metric_test["tp"], "/", (metric_test["tp"] + metric_test["fn"]), ",", test_recall
