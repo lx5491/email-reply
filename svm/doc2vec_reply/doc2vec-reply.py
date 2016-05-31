@@ -90,7 +90,7 @@ class TaggedLineSentence(object):
             no_count = 0
             for email_no, email in enumerate(self.emails):
                 label = ""
-                if self.emails["got_reply"] == "yes":
+                if email["got_reply"] == "yes":
                     prefix = "YES"
                     label = prefix + '_%s' % str(yes_count)
                     print "label:", label
