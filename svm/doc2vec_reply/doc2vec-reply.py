@@ -138,8 +138,8 @@ else:
 model = Doc2Vec.load('./reply.d2v')
 
 num_total_emails = sentences.num_emails_yes + sentences.num_emails_no
-email_arrays = numpy.zeros((num_total_emails, 100))
-email_labels = numpy.zeros(num_total_emails)
+email_arrays = np.zeros((num_total_emails, 100))
+email_labels = np.zeros(num_total_emails)
 
 for i in range(sentences.num_emails_yes):
     sentence_label = "YES_%s" % i
