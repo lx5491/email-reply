@@ -152,17 +152,18 @@ model = Doc2Vec(min_count=1, window=10, size=100, sample=1e-4, negative=5, worke
 model.build_vocab(sentences.to_array())
 
 d2v_filename = sys.argv[2]
+epoch_range = int(sys.argv[3])
 if not os.path.isfile(d2v_filename):
     logger.info('Epoch')
-    for epoch in range(50):
+    for epoch in range(epoch_range):
         logger.info('EPOCH: {}'.format(epoch))
         model.train(sentences.sentences_perm())
     logger.info('Model Save')
-    model.save('./reply.d2v')
+    model.save(d2v_filename)
 else:
     logger.info("D2V file found, no need to train")
 
-model = Doc2Vec.load('./reply.d2v')
+model = Doc2Vec.load(d2v_filename)
 
 num_total_emails = sentences.num_emails_yes + sentences.num_emails_no
 email_arrays = np.zeros((num_total_emails, 100))
