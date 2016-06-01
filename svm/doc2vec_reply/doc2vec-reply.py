@@ -65,7 +65,7 @@ class TaggedLineSentence(object):
             if word not in self.stop_words and len(word) <= 30 and self.url_re_matcher.match(word) == None \
                 and self.email_re_matcher.match(word) == None:
                 word = word.encode('utf-8') # change unicode object to normal string
-                word = word.translate(string.maketrans("", ""), string.punctuation)
+                # word = word.translate(string.maketrans("", ""), string.punctuation)
                 word = word.lower()
                 word = word.decode('utf-8')
                 new_bag_of_words.append(word)
@@ -187,7 +187,7 @@ classifier = SVC()
 classifier.fit(train_arrays, train_labels)
 
 
-print "Test score:", classifier.score(train_arrays, train_labels)
+print "Train score:", classifier.score(train_arrays, train_labels)
 print "Test score:", classifier.score(test_arrays, test_labels)
 
 label_predict_train = classifier.predict(train_arrays)
