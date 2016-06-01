@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.decomposition import RandomizedPCA
 from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
 
 import json
 import sys
