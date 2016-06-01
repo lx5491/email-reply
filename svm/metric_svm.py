@@ -10,6 +10,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.decomposition import RandomizedPCA
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
+from sklearn import tree
 
 import json
 import sys
@@ -118,9 +119,10 @@ if __name__ == "__main__":
     param_grid = {'C': [1, 2, 5],
               'gamma': [0.1, 0.5, 1]}
     # clf = GridSearchCV(SVC(kernel='rbf'), param_grid)
-    clf = SVC(C=0.1, gamma=0.005, class_weight='balanced')
+    # clf = SVC(C=0.1, gamma=0.005, class_weight='balanced')
     # clf = LogisticRegression(C=1.0, class_weight='balanced', dual=False, fit_intercept=True,
     #       intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
+    clf = DecisionTreeClassifier(criterion='gini')
     clf = clf.fit(X_train, y_train)
     y_predict_train = clf.predict(X_train)
     y_predict = clf.predict(X_test)
