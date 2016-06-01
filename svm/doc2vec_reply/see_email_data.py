@@ -52,7 +52,7 @@ print "num_contain_thanks_no_reply:", num_contain_thanks_no_reply
 print "num_no_thanks_got_reply:", num_no_thanks_got_reply
 print "num_no_thanks_no_reply:", num_no_thanks_no_reply
 print "with the word '%s', %0.3f emails got reply" % ('thank', float(num_contain_thanks_got_reply) / (num_contain_thanks_got_reply + num_contain_thanks_no_reply))
-print "without the word '%s', %0.3f emails got reply" % ('thank', float(num_no_thanks_got_reply) / (num_contain_no_got_reply + num_no_thanks_no_reply))
+print "without the word '%s', %0.3f emails got reply" % ('thank', float(num_no_thanks_got_reply) / (num_no_thanks_got_reply + num_no_thanks_no_reply))
 print "total emails num:", (num_contain_thanks_got_reply + num_contain_thanks_no_reply + num_no_thanks_got_reply + num_no_thanks_no_reply)
 
 
