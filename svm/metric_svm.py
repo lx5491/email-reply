@@ -11,6 +11,7 @@ from sklearn.decomposition import RandomizedPCA
 from sklearn.svm import SVC
 
 import json
+import sys
 
 def grab_data(filename):
     emails = []

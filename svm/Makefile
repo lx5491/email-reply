@@ -1,4 +1,4 @@
-DATA_FILE = data/email_data_1464729586.txt
+DATA_FILE = data/email_data_100Klines.txt
 D2V_TARGET = data/reply_300_20_1464729586.d2v
 # DATA_FILE = ../email_data_1464276919_2.txt
 # D2V_TARGET = reply_100_10_1464276919_2.d2v
