@@ -65,6 +65,25 @@ print "without the word '%s', %0.5f emails got reply" % ('thank', float(num_no_w
 print "total emails num:", (num_contain_words_got_reply + num_contain_words_no_reply + num_no_words_got_reply + num_no_words_no_reply)
 
 
+print
+num_desired_got_reply = 0
+num_desired_no_reply = 0
+num_no_desire_got_reply = 0
+num_no_desire_no_reply = 0
+for email in view.emails:
+    reply_desired = True if email['reply_desired'] == 'yes' else False
+    got_reply = True if email['got_reply'] == 'yes' else False
+    if reply_desired and got_reply:
+        num_desired_got_reply += 1
+    elif reply_desired and not got_reply:
+        num_desired_no_reply += 1
+    elif not reply_desired and got_reply:
+        num_no_desire_got_reply += 1
+    elif not reply_desired and not got_reply:
+        num_no_desire_no_reply += 1
+
+print "num_desired_got_reply, num_desired_no_reply, num_no_desire_got_reply, num_no_desire_no_reply:"
+print "", num_desired_got_reply, num_desired_no_reply, num_no_desire_got_reply, num_no_desire_no_reply
 
 
 
