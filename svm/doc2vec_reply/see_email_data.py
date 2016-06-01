@@ -87,8 +87,8 @@ for email in view.emails:
 
 print "num_desired_got_reply, num_desired_no_reply, num_no_desire_got_reply, num_no_desire_no_reply:"
 print "", num_desired_got_reply, num_desired_no_reply, num_no_desire_got_reply, num_no_desire_no_reply
-"With question, the response percentage is %0.5f" % float(num_desired_got_reply) / (num_desired_got_reply + num_desired_no_reply)
-"Without question, the response percentage is %0.5f" % float(num_no_desire_got_reply) / (num_no_desire_got_reply + num_no_desire_no_reply)
+"With question, the response percentage is %0.5f" % (float(num_desired_got_reply) / (num_desired_got_reply + num_desired_no_reply))
+"Without question, the response percentage is %0.5f" % (float(num_no_desire_got_reply) / (num_no_desire_got_reply + num_no_desire_no_reply))
 
 
 
