@@ -148,7 +148,7 @@ logger.info("making words in emails clean")
 sentences.make_clean()
 
 logger.info("D2V")
-model = Doc2Vec(min_count=1, window=10, size=100, sample=1e-4, negative=5, workers=7)
+model = Doc2Vec(min_count=1, window=10, size=300, sample=1e-4, negative=5, workers=7)
 model.build_vocab(sentences.to_array())
 
 d2v_filename = sys.argv[2]
@@ -166,7 +166,7 @@ else:
 model = Doc2Vec.load(d2v_filename)
 
 num_total_emails = sentences.num_emails_yes + sentences.num_emails_no
-email_arrays = np.zeros((num_total_emails, 100))
+email_arrays = np.zeros((num_total_emails, 300))
 email_labels = np.zeros(num_total_emails)
 
 for i in range(sentences.num_emails_yes):
@@ -179,17 +179,19 @@ for i in range(sentences.num_emails_no):
     email_arrays[i + sentences.num_emails_yes] = model.docvecs[sentence_label]
     email_labels[i + sentences.num_emails_yes] = 0
 
-logger.info('Fitting')
+
+logger.info("Splittling the train and test samples")
 train_arrays, test_arrays, train_labels, test_labels = train_test_split(email_arrays, email_labels, test_size=0.2, random_state=42)
 
-# classifier = LogisticRegression(C=2.0, class_weight=None, dual=False, fit_intercept=True,
-#           intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
-classifier = SVC()
+classifier = LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+          intercept_scaling=1, penalty='l2', random_state=None, tol=0.0001)
+# classifier = SVC()
+logger.info('Fitting')
 classifier.fit(train_arrays, train_labels)
 
 
-print "Train score:", classifier.score(train_arrays, train_labels)
-print "Test score:", classifier.score(test_arrays, test_labels)
+logger.info("Train score: %0.9f" % classifier.score(train_arrays, train_labels))
+logger.info("Test score: %0.9f" % classifier.score(test_arrays, test_labels))
 
 label_predict_train = classifier.predict(train_arrays)
 label_predict_test = classifier.predict(test_arrays)
@@ -199,20 +201,18 @@ metric_test = metric_predict(test_labels, label_predict_test)
 # train_precision = metric_train["precision"]
 # train_recall = metric_train["recall"]
 # train_f1_score = metric_train["f1_score"]
-print "Train metric(tp, fp, tn, fn):", metric_train["tp"], metric_train["fp"], metric_train["tn"], metric_train["fn"]
+logger.info("Train metric(tp, fp, tn, fn): %d, %d, %d, %d" % (metric_train["tp"], metric_train["fp"], metric_train["tn"], metric_train["fn"])) 
 # print "Train precision:", metric_train["tp"], "/", (metric_train["tp"] + metric_train["fp"]), ",", train_precision
 # print "Train recall: ", metric_train["tp"], "/", (metric_train["tp"] + metric_train["fn"]), ",", train_recall
 # print "Train F1 score:", train_f1_score
-print ""
 
 # test_precision = metric_test["precision"]
 # test_recall = metric_test["recall"]
 # test_f1_score = metric_test["f1_score"]
-print "Test metric(tp, fp, tn, fn):", metric_test["tp"], metric_test["fp"], metric_test["tn"], metric_test["fn"]
+logger.info("Test metric(tp, fp, tn, fn): %d, %d, %d, %d" % (metric_test["tp"], metric_test["fp"], metric_test["tn"], metric_test["fn"])) 
 # print "Test precision:", metric_test["tp"], "/", (metric_test["tp"] + metric_test["fp"]), ",", test_precision
 # print "Test recall: ", metric_test["tp"], "/", (metric_test["tp"] + metric_test["fn"]), ",", test_recall
 # print "Test F1 score:", test_f1_score
-print
 
 
 
