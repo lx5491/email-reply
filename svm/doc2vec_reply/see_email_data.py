@@ -17,5 +17,16 @@ class DataViewer(object):
 view = DataViewer()
 data_filename = sys.argv[1]
 view.load_data(data_filename)
-for i in range(5):
-    print view.emails[i]
+num_yes_emails = 0
+num_no_emails = 0
+for email in view.emails
+    if email["got_reply"] == "yes" and num_yes_emails < 5:
+        print "YES:"
+        print email['body'].encode("utf-8")
+        print ""
+        num_yes_emails += 1
+    elif num_no_emails < 5:
+        print "NO:"
+        print email['body'].encode("utf-8")
+        print ""
+        num_no_emails += 1
