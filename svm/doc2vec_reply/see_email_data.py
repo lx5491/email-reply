@@ -30,3 +30,24 @@ for email in view.emails:
         print email['body'].encode("utf-8")
         print ""
         num_no_emails += 1
+
+num_contain_thanks = 0
+num_no_thanks = 0
+for email in view.emails:
+    body_text = email['body'].encode('utf-8').lower()
+    if 'thank' in body_text or 'thanks' in body_text:
+        num_contain_thanks += 1
+    else:
+        num_no_thanks += 1
+
+print "num_contain_thanks:", num_contain_thanks
+print "num_no_thanks:", num_no_thanks
+
+
+
+
+
+
+
+
+
