@@ -98,7 +98,8 @@ def metric_predict(y_true, y_predict):
     return metric
 
 if __name__ == "__main__":
-    emails = grab_data("email_data2.txt")
+    data_filename = sys.argv[1]
+    emails = grab_data(data_filename)
     print "There are", len(emails), "emails"
     train_num = 1500
     test_num = len(emails) - train_num
@@ -112,8 +113,8 @@ if __name__ == "__main__":
     print "Test size:", len(y_test)
 
     t0 = time()
-    param_grid = {'C': [1000, 1500, 2000],
-              'gamma': [0.005, 0.1, 0.5, 1, 2, 5, 10]}
+    param_grid = {'C': [1, 2, 5],
+              'gamma': [0.1, 0.5, 1]}
     clf = GridSearchCV(SVC(kernel='rbf'), param_grid)
     # clf = SVC(C=0.1, gamma=0.005, class_weight='balanced')
     clf = clf.fit(X_train, y_train)
