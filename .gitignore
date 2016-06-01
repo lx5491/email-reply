@@ -4,3 +4,4 @@ svm/GoogleNews*
 *.DS_Store
 svm/doc2vec_reply/*.d2v
 svm/doc2vec_reply/email_data*
+svm/data/*
