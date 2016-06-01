@@ -10,7 +10,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.decomposition import RandomizedPCA
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
-from sklearn import tree
+from sklearn.tree import DecisionTreeClassifier
 
 import json
 import sys
