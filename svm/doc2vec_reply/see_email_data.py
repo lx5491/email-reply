@@ -14,6 +14,13 @@ class DataViewer(object):
                 self.emails.append(msg)
                 count += 1
 
+def words_or_in_text(words, text):
+    for word in words:
+        if word in text:
+            return True
+
+    return False
+
 view = DataViewer()
 data_filename = sys.argv[1]
 view.load_data(data_filename)
@@ -31,29 +38,31 @@ for email in view.emails:
         print ""
         num_no_emails += 1
 
-num_contain_thanks_got_reply = 0
-num_contain_thanks_no_reply = 0
-num_no_thanks_got_reply = 0
-num_no_thanks_no_reply = 0
+num_contain_words_got_reply = 0
+num_contain_words_no_reply = 0
+num_no_words_got_reply = 0
+num_no_words_no_reply = 0
+words = ['thank', 'thanks']
 for email in view.emails:
     body_text = email['body'].encode('utf-8').lower()
-    if ('thank' in body_text or 'thanks' in body_text) and email['got_reply'] == 'yes':
-        num_contain_thanks_got_reply += 1
-    elif ('thank' in body_text or 'thanks' in body_text) and email['got_reply'] == 'no':
-        num_contain_thanks_no_reply += 1
-    elif not ('thank' in body_text or 'thanks' in body_text) and email['got_reply'] == 'yes':
-        num_no_thanks_got_reply += 1
-    elif not ('thank' in body_text or 'thanks' in body_text) and email['got_reply'] == 'no':
-        num_no_thanks_no_reply += 1
+    if words_or_in_text(words, body_text) and email['got_reply'] == 'yes':
+        num_contain_words_got_reply += 1
+    elif words_or_in_text(words, body_text) and email['got_reply'] == 'no':
+        num_contain_words_no_reply += 1
+    elif not words_or_in_text(words, body_text) and email['got_reply'] == 'yes':
+        num_no_words_got_reply += 1
+    elif not words_or_in_text(words, body_text) and email['got_reply'] == 'no':
+        num_no_words_no_reply += 1
 
 
-print "num_contain_thanks_got_reply:", num_contain_thanks_got_reply
-print "num_contain_thanks_no_reply:", num_contain_thanks_no_reply
-print "num_no_thanks_got_reply:", num_no_thanks_got_reply
-print "num_no_thanks_no_reply:", num_no_thanks_no_reply
-print "with the word '%s', %0.3f emails got reply" % ('thank', float(num_contain_thanks_got_reply) / (num_contain_thanks_got_reply + num_contain_thanks_no_reply))
-print "without the word '%s', %0.3f emails got reply" % ('thank', float(num_no_thanks_got_reply) / (num_no_thanks_got_reply + num_no_thanks_no_reply))
-print "total emails num:", (num_contain_thanks_got_reply + num_contain_thanks_no_reply + num_no_thanks_got_reply + num_no_thanks_no_reply)
+print "words:", words
+print "num_contain_words_got_reply:", num_contain_words_got_reply
+print "num_contain_words_no_reply:", num_contain_words_no_reply
+print "num_no_words_got_reply:", num_no_words_got_reply
+print "num_no_words_no_reply:", num_no_words_no_reply
+print "with the word '%s', %0.5f emails got reply" % ('thank', float(num_contain_words_got_reply) / (num_contain_words_got_reply + num_contain_words_no_reply))
+print "without the word '%s', %0.5f emails got reply" % ('thank', float(num_no_words_got_reply) / (num_no_words_got_reply + num_no_words_no_reply))
+print "total emails num:", (num_contain_words_got_reply + num_contain_words_no_reply + num_no_words_got_reply + num_no_words_no_reply)
 
 
 
