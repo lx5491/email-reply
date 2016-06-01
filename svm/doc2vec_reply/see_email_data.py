@@ -76,6 +76,9 @@ for email in view.emails:
     if reply_desired and got_reply:
         num_desired_got_reply += 1
     elif reply_desired and not got_reply:
+        if num_desired_no_reply < 2:
+            print "desired no reply:"
+            print email['body'].encode('utf-8')
         num_desired_no_reply += 1
     elif not reply_desired and got_reply:
         num_no_desire_got_reply += 1
