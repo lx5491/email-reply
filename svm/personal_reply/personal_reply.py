@@ -1,10 +1,10 @@
 
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
+import numpy as np
+# from sklearn.svm import SVC
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.tree import DecisionTreeClassifier
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 import json
 import sys
@@ -24,7 +24,7 @@ class PersonReply(object):
                 self.emails.append(msg)
                 count += 1
 
-        basic_process(self)
+        self.basic_process()
 
     def basic_process(self):
         for email in self.emails:
@@ -64,8 +64,9 @@ class PersonReplyPlayground(object):
             # TODO
             
     def experiment_1(self):
-        X = np.zeros((len(self.person_reply.email), 4))
-        Y = np.zeros(len(self.person_reply.email))
+        X = np.zeros((len(self.person_reply.emails), 4), dtype=float)
+        Y = np.zeros(len(self.person_reply.emails))
+        print self.person_reply.emails
         for idx, email in enumerate(self.person_reply.emails):
             user_id = email["user"]
             sender_id = email["from"]["id"]
@@ -108,6 +109,7 @@ if __name__ == "__main__":
     
     pr_playground = PersonReplyPlayground(person_reply)
     # print pr_playground.subject_has_words("Hello World", ["Hello", "World", "Go"], relation="or")
+    pr_playground.experiment_1()
 
 
 
