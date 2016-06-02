@@ -33,8 +33,9 @@ class PersonReply(object):
 
 
 class PersonReplyPlayground(object):
-    def __init__(self, person_reply):
+    def __init__(self, person_reply, logger):
         self.person_reply = person_reply
+        self.logger = logger
 
     def subject_has_words(self, subject, words, relation="or"):
         word_in_count = 0
@@ -64,8 +65,10 @@ class PersonReplyPlayground(object):
             # TODO
             
     def experiment_1(self):
-        X = np.zeros((len(self.person_reply.emails), 4), dtype=float)
-        Y = np.zeros(len(self.person_reply.emails))
+        # X = np.zeros((len(self.person_reply.emails), 4), dtype=float)
+        # Y = np.zeros(len(self.person_reply.emails))
+        X = np.empty([0, 4])
+        Y = np.empty([0])
         # print self.person_reply.emails
         for idx, email in enumerate(self.person_reply.emails):
             user_id = email["user"]
@@ -79,17 +82,13 @@ class PersonReplyPlayground(object):
             relative_connection_score = email["from"]["relative_score"]
             raw_connection_score = email["from"]["raw_score"]
             reply_rate = email["from"]["reply_rate"]
-            feature_vec = np.array([num_questions, relative_connection_score, raw_connection_score, reply_rate])
-            X[idx] = feature_vec
-            Y[idx] = 1 if this_user_replied else 0
+            feature_vec = np.array([[num_questions, relative_connection_score, raw_connection_score, reply_rate]])
+            X = np.concatenate((X, feature_vec), axis=0)
+            label_vec= np.array([1 if this_user_replied else 0])
+            Y = np.concatenate((Y, label_vec), axis=0)
 
-        print "X:"
-        print X
-        print "Y:"
-        print Y
-        print "Y has %d 1s" % np.count_nonzero(Y)
-
-
+        self.logger.info("There are %d emails with replies for user %s" % (Y.shape[0], user_id))
+        self.logger.info("Y has %d 1s" % np.count_nonzero(Y))
 
 
 
@@ -108,7 +107,7 @@ if __name__ == "__main__":
     data_filename = sys.argv[1]
     person_reply.load_data(data_filename)
     
-    pr_playground = PersonReplyPlayground(person_reply)
+    pr_playground = PersonReplyPlayground(person_reply, logger)
     # print pr_playground.subject_has_words("Hello World", ["Hello", "World", "Go"], relation="or")
     pr_playground.experiment_1()
 
