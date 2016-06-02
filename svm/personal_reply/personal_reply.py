@@ -75,7 +75,7 @@ class PersonReplyPlayground(object):
                 break
             reply_users = email["replied_from"]
             this_user_replied = True if user_id in reply_users else False
-            num_questions = len(email["questions"])
+            num_questions = len(email["questions"]) if email["questions"] else 0
             relative_connection_score = email["from"]["relative_score"]
             raw_connection_score = email["from"]["raw_score"]
             reply_rate = email["from"]["reply_rate"]
