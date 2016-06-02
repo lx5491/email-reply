@@ -12,8 +12,9 @@ import os
 import logging
 
 class PersonReply(object):
-    def __init__(self):
+    def __init__(self, logger):
         self.emails = []
+        self.logger = logger
 
     def load_data(self, data_filename):
         count = 0
@@ -23,7 +24,7 @@ class PersonReply(object):
                 msg = json.loads(line)
                 self.emails.append(msg)
                 count += 1
-
+        self.logger.info("loaded %d emails" % len(self.emails))
         self.basic_process()
 
     def basic_process(self):
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     logging.root.setLevel(level=logging.INFO)
     logger.info("running %s" % ' '.join(sys.argv))
 
-    person_reply = PersonReply()
+    person_reply = PersonReply(logger)
     data_filename = sys.argv[1]
     person_reply.load_data(data_filename)
     
