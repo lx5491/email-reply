@@ -73,8 +73,8 @@ class PersonReplyPlayground(object):
             if user_id == sender_id:
                 print "Skipping user_id", user_id
                 break
-            reply_users = email["replied_from"]
-            this_user_replied = True if user_id in reply_users else False
+            reply_user_ids = [person["id"] for person in email["replied_from"]]
+            this_user_replied = True if user_id in reply_user_ids else False
             num_questions = len(email["questions"]) if email["questions"] else 0
             relative_connection_score = email["from"]["relative_score"]
             raw_connection_score = email["from"]["raw_score"]
@@ -87,6 +87,7 @@ class PersonReplyPlayground(object):
         print X
         print "Y:"
         print Y
+        print "Y has %d 1s" % np.count_nonzero(Y)
 
 
 
