@@ -28,7 +28,7 @@ class PersonReply(object):
 
     def basic_process(self):
         for email in self.emails:
-            email["subject"] = email["subject"].lower()
+            email["subject"] = email["subject"].lower() if email["subject"] != None else ""
             email["body"] = email["body"].lower()
 
 
