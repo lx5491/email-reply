@@ -66,7 +66,7 @@ class PersonReplyPlayground(object):
     def experiment_1(self):
         X = np.zeros((len(self.person_reply.emails), 4), dtype=float)
         Y = np.zeros(len(self.person_reply.emails))
-        print self.person_reply.emails
+        # print self.person_reply.emails
         for idx, email in enumerate(self.person_reply.emails):
             user_id = email["user"]
             sender_id = email["from"]["id"]
