@@ -139,6 +139,7 @@ class PersonReplyPlayground(object):
         self.logger.info("LogisticRegression -- Precision on test data: %0.4f" % precision)
         self.logger.info("LogisticRegression -- Recall on test data: %0.4f" % recall)
 
+    # use SVM with feature vector [num_questions, relative_connection_score, raw_connection_score, reply_rate] to train and test
     def experiment_2(self):
         # X = np.zeros((len(self.person_reply.emails), 4), dtype=float)
         # Y = np.zeros(len(self.person_reply.emails))
@@ -204,6 +205,7 @@ class PersonReplyPlayground(object):
         self.logger.info("SVM Classification -- Precision on test data: %0.4f" % precision)
         self.logger.info("SVM Classification -- Recall on test data: %0.4f" % recall)
 
+    # use Decision Tree with feature vector [num_questions, relative_connection_score, raw_connection_score, reply_rate] to train and test
     def experiment_3(self):
         # X = np.zeros((len(self.person_reply.emails), 4), dtype=float)
         # Y = np.zeros(len(self.person_reply.emails))
@@ -308,10 +310,19 @@ class PersonReplyPlayground(object):
         plt.scatter(relative_scores, reply_rates)
         plt.savefig("score_reply.png")
 
+    def print_an_email(self, email):
+        print ""
+        print "============================================================================="
+        print email
+        print "-----------------------------------------------------------------------------"
+        print email["body"].encode('utf-8')
+        print "============================================================================="
+        print ""
+
     #show some examples of replied emails and unreplied emails
     def experiment_5(self):
-        num_replied = 30
-        num_unreplied = 30
+        num_replied = 10000
+        num_unreplied = 10000
         emails_replied = []
         emails_unreplied = []
         for email in self.person_reply.emails:
@@ -334,6 +345,7 @@ class PersonReplyPlayground(object):
         self.logger.info("the number of unreplied emails that have questions: %d" %questions_unreplied)
 
         # examples of replied emails
+        # count = 0
         # for email in emails_replied:
         #     print ""
         #     print "============================================================================="
@@ -342,45 +354,101 @@ class PersonReplyPlayground(object):
         #     print email["body"].encode('utf-8')
         #     print "============================================================================="
         #     print ""
+        #     count += 1
+
+        # examples of replied emails with a question:
+        count = 0
+        for email in emails_replied:
+            if not email["questions"] or len(email["questions"]) == 0:
+                continue
+            # self.print_an_email(email)
+            count += 1
+        self.logger.info("# replied emails with a question: %d" % count)
+        self.logger.info("# replied emails in total: %d" % len(emails_replied))
+        self.logger.info("Percentage: %0.3f%%" % (float(count) / len(emails_replied) * 100))
+
+
 
         # examples of replied emails without a question:
-        # for email in emails_replied:
-        #     if email["questions"] and len(email["questions"]) > 0:
-        #         continue
-        #     print ""
-        #     print "============================================================================="
-        #     print email
-        #     print "-----------------------------------------------------------------------------"
-        #     print email["body"].encode('utf-8')
-        #     print "============================================================================="
-        #     print ""
+        count = 0
+        for email in emails_replied:
+            if email["questions"] and len(email["questions"]) > 0:
+                continue
+            # self.print_an_email(email)
+            count += 1
+        self.logger.info("# replied emails without a question: %d" % count)
+        self.logger.info("# replied emails in total: %d" % len(emails_replied))
+        self.logger.info("Percentage: %0.3f%%" % (float(count) / len(emails_replied) * 100))
 
         # examples of unreplied emails with a question:
+        count = 0
         for email in emails_unreplied:
             if not email["questions"] or len(email["questions"]) == 0:
                 continue
-            print ""
-            print "============================================================================="
-            print email
-            print "-----------------------------------------------------------------------------"
-            print email["body"].encode('utf-8')
-            print "============================================================================="
-            print ""
+            # self.print_an_email(email)
+            count += 1
+        self.logger.info("# unreplied emails with a question: %d" % count)
+        self.logger.info("# unreplied emails in total: %d" % len(emails_unreplied))
+        self.logger.info("Percentage: %0.3f%%" % (float(count) / len(emails_unreplied) * 100))
 
-        # examples of unreplied emails with a question:
-        # for email in emails_unreplied:
-        #     if email["questions"] and len(email["questions"]) > 0:
-        #         continue
-        #     print ""
-        #     print "============================================================================="
-        #     print email
-        #     print "-----------------------------------------------------------------------------"
-        #     print email["body"].encode('utf-8')
-        #     print "============================================================================="
-        #     print ""
+        # examples of unreplied emails without a question:
+        count = 0
+        for email in emails_unreplied:
+            if email["questions"] and len(email["questions"]) > 0:
+                continue
+            # self.print_an_email(email)
+            count += 1
+        self.logger.info("# unreplied emails with a question: %d" % count)
+        self.logger.info("# unreplied emails in total: %d" % len(emails_unreplied))
+        self.logger.info("Percentage: %0.3f%%" % (float(count) / len(emails_unreplied) * 100))
 
+    def email_got_reply(self, email):
+        user_id = email["user"]
+        reply_user_ids = [person["id"] for person in email["replied_from"]]
+        this_user_replied = True if user_id in reply_user_ids else False
+        return this_user_replied
 
+    def experiment_6(self):
+        num_question_emails = 3000
+        num_no_question_emails = 3000
+        emails_with_question = []
+        emails_no_question = []
+        for email in self.person_reply.emails:
+            user_id = email["user"]
+            sender_id = email["from"]["id"]
+            if user_id == sender_id:
+                self.logger.info("Skipping user_id %s" % user_id)
+                continue
 
+            questions = email["questions"]
+            if questions and len(questions) > 0:
+                emails_with_question.append(email)
+            else:
+                emails_no_question.append(email)
+
+        self.logger.info("There are %d question emails and %d no-question emails" % (len(emails_with_question), len(emails_no_question)))
+
+        got_reply_count = 0
+        no_reply_count = 0
+        for email in emails_with_question:
+            got_reply = self.email_got_reply(email)
+            if got_reply:
+                got_reply_count += 1
+            else:
+                no_reply_count += 1
+        self.logger.info("For emails with questions: %d (%0.3f%%) has reply, %d (%0.3f%%) no reply" % (got_reply_count, float(got_reply_count) / len(emails_with_question) * 100, \
+            no_reply_count, float(no_reply_count) / len(emails_with_question) * 100))
+
+        got_reply_count = 0
+        no_reply_count = 0
+        for email in emails_no_question:
+            got_reply = self.email_got_reply(email)
+            if got_reply:
+                got_reply_count += 1
+            else:
+                no_reply_count += 1
+        self.logger.info("For emails without questions: %d (%0.3f%%) has reply, %d (%0.3f%%) no reply" % (got_reply_count, float(got_reply_count) / len(emails_no_question) * 100, \
+            no_reply_count, float(no_reply_count) / len(emails_no_question) * 100))
 
 if __name__ == "__main__":
     program = os.path.basename(sys.argv[0])
@@ -400,7 +468,8 @@ if __name__ == "__main__":
     # pr_playground.experiment_2()
     # pr_playground.experiment_3()
     # pr_playground.experiment_4()
-    pr_playground.experiment_5()
+    # pr_playground.experiment_5()
+    pr_playground.experiment_6()
 
 
 

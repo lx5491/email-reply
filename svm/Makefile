@@ -6,6 +6,8 @@ D2V_EPOCH_RANGE = 20
 
 # PERSONAL_REPLY_DATA_FILE = data/email_person_reply_12345.txt
 
+STOPWORDS_FILE = stopwords.txt
+
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
 # Run MacOS commands 
@@ -26,6 +28,9 @@ metric: metric_svm.py $(DATA_FILE)
 
 person_reply: personal_reply/personal_reply.py $(PERSONAL_REPLY_DATA_FILE)
 	python personal_reply/personal_reply.py $(PERSONAL_REPLY_DATA_FILE)
+
+vsm_mi: vsm/mutual_info.py $(PERSONAL_REPLY_DATA_FILE) $(STOPWORDS_FILE)
+	python vsm/mutual_info.py $(PERSONAL_REPLY_DATA_FILE) $(STOPWORDS_FILE)
 
 clean:
 	rm $(D2V_TARGET)
